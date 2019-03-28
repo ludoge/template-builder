@@ -32,7 +32,7 @@ class BaseProject(object):
         self._update_branch_name = 'tb_testing'
         # Default: 'Update to latest upstream'. DO NOT MODIFY except for testing purposes, then RETURN TO 'Update to
         #   latest upstream'
-        self._commit_message = 'Update to latest upstream'
+        self._commit_message = 'TEST: Do Not Merge'
 
     @property
     def cleanup(self):
@@ -103,8 +103,11 @@ class BaseProject(object):
         ]
 
     @property
-    def createPR(self):
-        return 0
+    def create_pr(self):
+        # Create a pull request using the last commit message
+        return ['cd {0} && hub pull-request -m "{1}"'.format(self.builddir, self._commit_message)]
+        # hub pull-request -m "$(git log -1 --pretty=%B)"
+        # return 0
 
     def packageUpdateActions(self):
         """

@@ -135,6 +135,18 @@ def task_rebuild():
         }
 
 
+def task_create_pr():
+    """
+    DoIt Task: Pushes a prepared branch to GitHub.
+
+    Usage: doit push:<project>
+    """
+    for project in ALL_PROJECTS:
+        yield {
+            'name': project.name,
+            'actions': project.create_pr,
+        }
+
 def task_full():
     """
     DoIt Task: Aggregates the init, rebuild, and push tasks for one-stop shopping.
@@ -145,7 +157,7 @@ def task_full():
         yield {
             'name': project.name,
             'task_dep': ["{0}:{1}".format(action, project.name)
-                         for action in ['cleanup', 'init', 'update', 'platformify', 'branch', 'push']
+                         for action in ['cleanup', 'init', 'update', 'platformify', 'branch', 'push', 'create_pr']
                          ],
             'actions': [],
         }
