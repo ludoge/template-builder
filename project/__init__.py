@@ -28,6 +28,9 @@ class BaseProject(object):
         self.name = name
         self.builddir = os.path.join(TEMPLATEDIR, self.name, 'build/')
 
+        # Default: 'update'. DO NOT MODIFY except for testing purposes, then RETURN TO 'update'
+        self._update_branch_name = 'tb_testing'
+
     @property
     def cleanup(self):
         return ['rm -rf {0}'.format(self.builddir)]
@@ -81,9 +84,9 @@ class BaseProject(object):
     @property
     def branch(self):
         return [
-            'cd {0} && if git rev-parse --verify --quiet update; then git checkout master && git branch -D update; fi;'.format(
-                self.builddir),
-            'cd {0} && git checkout -b update'.format(self.builddir),
+            'cd {0} && if git rev-parse --verify --quiet {1}; then git checkout master && git branch -D {1}; fi;'.format(
+                self.builddir, self._update_branch_name),
+            'cd {0} && git checkout -b {1}'.format(self.builddir, self._update_branch_name),
             # git commit exits with 1 if there's nothing to update, so the diff-index check will
             # short circuit the command if there's nothing to update with an exit code of 0.
             'cd {0} && git add -A && git diff-index --quiet HEAD || git commit -m "Update to latest upstream"'.format(
@@ -92,10 +95,13 @@ class BaseProject(object):
 
     @property
     def push(self):
-        return ['cd {0} && if [ `git rev-parse update` != `git rev-parse master` ] ; then git checkout update && git push --force -u origin update; fi'.format(
-            self.builddir)
+        return ['cd {0} && if [ `git rev-parse {1}` != `git rev-parse master` ] ; then git checkout {1} && git push --force -u origin {1}; fi'.format(
+            self.builddir, self._update_branch_name)
         ]
 
+    @property
+    def createPR(self):
+        return 0
 
     def packageUpdateActions(self):
         """
