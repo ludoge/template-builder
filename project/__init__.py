@@ -30,6 +30,9 @@ class BaseProject(object):
 
         # Default: 'update'. DO NOT MODIFY except for testing purposes, then RETURN TO 'update'
         self._update_branch_name = 'tb_testing'
+        # Default: 'Update to latest upstream'. DO NOT MODIFY except for testing purposes, then RETURN TO 'Update to
+        #   latest upstream'
+        self._commit_message = 'Update to latest upstream'
 
     @property
     def cleanup(self):
@@ -89,8 +92,8 @@ class BaseProject(object):
             'cd {0} && git checkout -b {1}'.format(self.builddir, self._update_branch_name),
             # git commit exits with 1 if there's nothing to update, so the diff-index check will
             # short circuit the command if there's nothing to update with an exit code of 0.
-            'cd {0} && git add -A && git diff-index --quiet HEAD || git commit -m "Update to latest upstream"'.format(
-                self.builddir),
+            'cd {0} && git add -A && git diff-index --quiet HEAD || git commit -m "{1}"'.format(
+                self.builddir, self._commit_message),
         ]
 
     @property
