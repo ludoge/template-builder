@@ -135,7 +135,7 @@ def task_rebuild():
         }
 
 
-def task_create_pr():
+def task_pr():
     """
     DoIt Task: Pushes a prepared branch to GitHub.
 
@@ -144,7 +144,7 @@ def task_create_pr():
     for project in ALL_PROJECTS:
         yield {
             'name': project.name,
-            'actions': project.create_pr,
+            'actions': project.pr,
         }
 
 def task_full():
@@ -157,7 +157,7 @@ def task_full():
         yield {
             'name': project.name,
             'task_dep': ["{0}:{1}".format(action, project.name)
-                         for action in ['cleanup', 'init', 'update', 'platformify', 'branch', 'push', 'create_pr']
+                         for action in ['cleanup', 'init', 'update', 'platformify', 'branch', 'push', 'pr']
                          ],
             'actions': [],
         }

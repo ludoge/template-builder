@@ -103,11 +103,8 @@ class BaseProject(object):
         ]
 
     @property
-    def create_pr(self):
-        # Create a pull request using the last commit message
+    def pr(self):
         return ['cd {0} && hub pull-request -m "{1}"'.format(self.builddir, self._commit_message)]
-        # hub pull-request -m "$(git log -1 --pretty=%B)"
-        # return 0
 
     def packageUpdateActions(self):
         """
